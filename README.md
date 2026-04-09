@@ -60,6 +60,16 @@ curl http://localhost:3001/metrics | head -n 20
 docker compose down
 ```
 
+## Evidence Pack
+
+Use these files for a fast, auditable validation path:
+
+- Observability smoke run: `evidence/verification/observability-smoke.md`
+- Startup reliability snapshot: `evidence/verification/startup-dx.md`
+- Marketplace skills linkage: `evidence/marketplace/connection-evidence.md`
+- Orchestrator context sample: `evidence/orchestrator/prd-002-context.json`
+- Orchestrator execution report: `evidence/orchestrator/prd-002-report.md`
+
 ## Sentry Production-Like Setup
 
 Set these values in `.env` before running if you want real Sentry capture:
@@ -90,6 +100,7 @@ If `SENTRY_DSN` is empty or `SENTRY_ENABLED=false`, backend continues working bu
 5. Open dashboard `Signal Lab Dashboard` and confirm all panels show data.
 6. In Grafana Explore, select Loki and run query `{app="signal-lab"}`.
 7. Verify a `system_error` exception appears in your Sentry project dashboard (requires real DSN in `.env`).
+8. Cross-check expected outputs in `evidence/verification/observability-smoke.md`.
 
 ## 15-Minute Interviewer Walkthrough
 
@@ -100,6 +111,7 @@ If `SENTRY_DSN` is empty or `SENTRY_ENABLED=false`, backend continues working bu
 5. Confirm Grafana dashboard and Loki logs.
 6. Inspect `.cursor/` artifacts (rules, skills, commands, hooks, orchestrator).
 7. Run orchestrator command flow using `prds/` input and verify `.execution/<timestamp>/context.json` behavior.
+8. Compare runtime outcomes with the `evidence/` bundle.
 
 ## Cursor AI Layer
 
@@ -109,7 +121,7 @@ Includes:
 
 - 5 scoped rules (`.cursor/rules/`)
 - 4 custom skills including orchestrator (`.cursor/skills/`)
-- 4 reusable commands (`.cursor/commands/`)
+- 5 reusable commands (`.cursor/commands/`)
 - 2 hooks with safety checks (`.cursor/hooks/`)
 - 6 marketplace skills rationale (`.cursor/marketplace-skills.md`)
 

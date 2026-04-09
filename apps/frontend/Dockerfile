@@ -7,7 +7,7 @@ USER root
 WORKDIR /workspace/apps/frontend
 
 COPY apps/frontend/package*.json ./
-RUN npm install
+RUN npm ci --no-audit --no-fund
 
 COPY apps/frontend ./
 

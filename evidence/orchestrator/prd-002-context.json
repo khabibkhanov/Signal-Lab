@@ -1,0 +1,173 @@
+{
+	"executionId": "2026-04-09-14-20",
+	"prdPath": "prds/002_prd-observability-demo.md",
+	"status": "completed",
+	"currentPhase": "report",
+	"resumeSupported": true,
+	"modelAllocation": {
+		"fast": 10,
+		"default": 3
+	},
+	"artifacts": {
+		"report": "evidence/orchestrator/prd-002-report.md",
+		"verification": "evidence/verification/observability-smoke.md"
+	},
+	"phases": {
+		"analysis": {
+			"status": "completed",
+			"result": "Requirements extracted: 4 scenario types, Prometheus metrics, Loki logs, Sentry errors, Grafana 3+ panels"
+		},
+		"codebase": {
+			"status": "completed",
+			"result": "Mapped backend observability modules, frontend scenario runner, docker monitoring stack"
+		},
+		"planning": {
+			"status": "completed",
+			"result": "Execution grouped by backend instrumentation, dashboard provisioning, and verification flow"
+		},
+		"decomposition": {
+			"status": "completed",
+			"result": "13 atomic tasks; 10 fast model, 3 default model"
+		},
+		"implementation": {
+			"status": "completed",
+			"completedTasks": 13,
+			"totalTasks": 13
+		},
+		"review": {
+			"status": "completed",
+			"retries": 1,
+			"result": "Loki label filtering and dashboard query tweaks passed on retry"
+		},
+		"report": {
+			"status": "completed",
+			"result": "Execution summary generated"
+		}
+	},
+	"signal": 42,
+	"tasks": [
+		{
+			"id": "task-001",
+			"title": "Define scenario DTO types",
+			"domain": "backend",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": [],
+			"status": "completed"
+		},
+		{
+			"id": "task-002",
+			"title": "Persist scenario runs in Prisma",
+			"domain": "database",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": ["task-001"],
+			"status": "completed"
+		},
+		{
+			"id": "task-003",
+			"title": "Implement success and validation scenarios",
+			"domain": "backend",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": ["task-001", "task-002"],
+			"status": "completed"
+		},
+		{
+			"id": "task-004",
+			"title": "Implement system_error and slow_request scenarios",
+			"domain": "backend",
+			"complexity": "medium",
+			"model": "default",
+			"dependencies": ["task-003"],
+			"status": "completed"
+		},
+		{
+			"id": "task-005",
+			"title": "Add scenario counters and histograms",
+			"domain": "backend",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": ["task-003"],
+			"status": "completed"
+		},
+		{
+			"id": "task-006",
+			"title": "Add structured log fields for Loki",
+			"domain": "backend",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": ["task-003"],
+			"status": "completed"
+		},
+		{
+			"id": "task-007",
+			"title": "Wire Sentry capture for system_error",
+			"domain": "backend",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": ["task-004"],
+			"status": "completed"
+		},
+		{
+			"id": "task-008",
+			"title": "Provision Prometheus and Grafana data sources",
+			"domain": "infra",
+			"complexity": "medium",
+			"model": "default",
+			"dependencies": [],
+			"status": "completed"
+		},
+		{
+			"id": "task-009",
+			"title": "Provision dashboard panels",
+			"domain": "infra",
+			"complexity": "medium",
+			"model": "default",
+			"dependencies": ["task-008"],
+			"status": "completed"
+		},
+		{
+			"id": "task-010",
+			"title": "Add frontend scenario mutation",
+			"domain": "frontend",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": ["task-003"],
+			"status": "completed"
+		},
+		{
+			"id": "task-011",
+			"title": "Add run history query and badges",
+			"domain": "frontend",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": ["task-010"],
+			"status": "completed"
+		},
+		{
+			"id": "task-012",
+			"title": "Run observability verification walkthrough",
+			"domain": "docs",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": [
+				"task-005",
+				"task-006",
+				"task-007",
+				"task-009",
+				"task-011"
+			],
+			"status": "completed"
+		},
+		{
+			"id": "task-013",
+			"title": "Generate final execution report",
+			"domain": "docs",
+			"complexity": "low",
+			"model": "fast",
+			"dependencies": ["task-012"],
+			"status": "completed"
+		}
+	]
+}

@@ -7,6 +7,42 @@
 			"enabled": true
 		}
 	},
+	"marketplaceSkills": [
+		{
+			"name": "next-best-practices",
+			"enabled": true,
+			"reason": "Next App Router architecture consistency"
+		},
+		{
+			"name": "shadcn-ui",
+			"enabled": true,
+			"reason": "UI component conventions and accessibility"
+		},
+		{
+			"name": "tailwind-design-system",
+			"enabled": true,
+			"reason": "Token and utility consistency"
+		},
+		{
+			"name": "nestjs-best-practices",
+			"enabled": true,
+			"reason": "Controller/service/module patterns"
+		},
+		{
+			"name": "prisma-orm",
+			"enabled": true,
+			"reason": "Schema and migration safety"
+		},
+		{
+			"name": "docker-expert",
+			"enabled": true,
+			"reason": "Compose diagnostics and container reliability"
+		}
+	],
+	"verification": {
+		"marketplaceSkillCommand": "/verify-marketplace",
+		"evidenceFile": "evidence/marketplace/connection-evidence.md"
+	},
 	"hooks": {
 		"postWrite": [
 			{

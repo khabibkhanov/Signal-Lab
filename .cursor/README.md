@@ -54,6 +54,7 @@
 - `/check-obs`
 - `/health-check`
 - `/run-prd`
+- `/verify-marketplace`
 
 ## Hooks
 
@@ -63,3 +64,9 @@
 ## Why Custom Skills if Marketplace Exists
 
 Marketplace skills provide broad framework advice, but custom skills capture this repository's operational contract, naming rules, and observability obligations so a new chat can continue work without re-briefing.
+
+## Marketplace Connection Evidence
+
+- Explicit linkage map: `.cursor/settings.json` (`marketplaceSkills` section)
+- Rationale catalog: `.cursor/marketplace-skills.md`
+- Verification runbook: `evidence/marketplace/connection-evidence.md`

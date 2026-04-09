@@ -9,7 +9,7 @@ RUN apk add --no-cache openssl
 WORKDIR /workspace/apps/backend
 
 COPY apps/backend/package*.json ./
-RUN npm install
+RUN npm ci --no-audit --no-fund
 
 COPY apps/backend ./
 COPY prisma /workspace/apps/backend/prisma

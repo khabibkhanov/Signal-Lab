@@ -20,6 +20,8 @@ cp .env.example .env && docker compose up -d --build
 
 # Команда проверки:
 curl http://localhost:3001/api/health && curl http://localhost:3001/metrics | head -n 20
+cat evidence/verification/observability-smoke.md | head -n 40
+cat evidence/verification/startup-dx.md | head -n 40
 
 # Команда остановки:
 docker compose down
@@ -27,6 +29,8 @@ docker compose down
 ```
 
 **Предусловия**: Docker Desktop 4.x+ (Compose), свободные порты 3000/3001/3100/9090/5432
+
+Артефакт стартовой надёжности: `evidence/verification/startup-dx.md`
 
 ---
 
@@ -60,6 +64,8 @@ docker compose down
 | Loki log          | В UI запустить любой сценарий, лучше `system_error` и `slow_request`     | Grafana Explore → Loki query `{app="signal-lab"}`                                                |
 | Sentry exception  | В UI запустить `system_error`                                            | Sentry project dashboard (при валидном `SENTRY_DSN` в `.env`)                                    |
 
+Артефакт проверки: `evidence/verification/observability-smoke.md`
+
 ---
 
 ## Cursor AI Layer
@@ -74,11 +80,12 @@ docker compose down
 
 ### Commands
 
-| #   | Command       | Что делает                                             |
-| --- | ------------- | ------------------------------------------------------ |
-| 1   | /add-endpoint | Добавляет новый backend endpoint по проектному шаблону |
-| 2   | /check-obs    | Проверяет observability-ready состояние изменений      |
-| 3   | /run-prd      | Запускает PRD через orchestrator pipeline              |
+| #   | Command             | Что делает                                                |
+| --- | ------------------- | --------------------------------------------------------- |
+| 1   | /add-endpoint       | Добавляет новый backend endpoint по проектному шаблону    |
+| 2   | /check-obs          | Проверяет observability-ready состояние изменений         |
+| 3   | /run-prd            | Запускает PRD через orchestrator pipeline                 |
+| 4   | /verify-marketplace | Проверяет связку marketplace skills с рабочими процессами |
 
 ### Hooks
 
@@ -112,12 +119,15 @@ docker compose down
 
 Custom skills закрывают Signal Lab-специфику: контракт метрик/логов по scenarioType, обязательный observability checklist для endpoint flow, и PRD-orchestrator с context.json + resume.
 
+Доказательство связки: `evidence/marketplace/connection-evidence.md`
+
 ---
 
 ## Orchestrator
 
 - **Путь к skill**: `.cursor/skills/signal-lab-orchestrator/SKILL.md`
-- **Путь к context file** (пример): `.execution/<timestamp>/context.json`
+- **Путь к context file** (пример): `evidence/orchestrator/prd-002-context.json`
+- **Путь к execution report** (пример): `evidence/orchestrator/prd-002-report.md`
 - **Сколько фаз**: `7`
 - **Какие задачи для fast model**: анализ PRD, codebase scan, простые backend/frontend/database изменения, readonly review, report generation
 - **Поддерживает resume**: да
