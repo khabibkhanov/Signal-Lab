@@ -6,6 +6,7 @@ apps/backend/node_modules/
 # Build outputs
 apps/frontend/.next/
 apps/backend/dist/
+*.tsbuildinfo
 
 # Environment
 .env
