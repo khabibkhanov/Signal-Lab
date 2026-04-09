@@ -75,25 +75,47 @@ export class ScenariosService {
 			});
 
 			this.metricsService.recordScenarioRun(dto.type, "error", duration);
+			const correlationId = `system-error-${run.id}-${Date.now()}`;
 			const scenarioError = new Error(
-				"Simulated system error from ScenarioService.",
+				`Simulated system error from ScenarioService. correlationId=${correlationId}`,
 			);
-			Sentry.withScope((scope) => {
+			const sentryEventId = Sentry.withScope((scope) => {
 				scope.setTag("scenario.type", dto.type);
 				scope.setTag("scenario.status", "error");
+				scope.setTag("scenario.id", run.id);
+				scope.setTag("scenario.correlation_id", correlationId);
 				scope.setContext("scenario", {
 					scenarioId: run.id,
 					scenarioType: dto.type,
 					duration,
 					name,
+					correlationId,
 				});
-				Sentry.captureException(scenarioError);
+
+				const isDevelopment =
+					(process.env.NODE_ENV ?? "development") === "development";
+				if (isDevelopment) {
+					// In dev, keep each UI-triggered system_error independently visible in Sentry.
+					scope.setFingerprint([
+						"signal-lab",
+						"system-error",
+						correlationId,
+					]);
+				} else {
+					scope.setFingerprint(["signal-lab", "system-error"]);
+				}
+
+				return Sentry.captureException(scenarioError);
 			});
+			const sentryFlushed = await Sentry.flush(1_500);
 			this.loggingService.error("System error scenario executed.", {
 				scenarioType: dto.type,
 				scenarioId: run.id,
 				duration,
 				error: scenarioError.message,
+				sentryEventId,
+				sentryCorrelationId: correlationId,
+				sentryFlushed,
 			});
 
 			throw new InternalServerErrorException(
@@ -148,6 +170,64 @@ export class ScenariosService {
 			orderBy: { createdAt: "desc" },
 			take: normalizedLimit,
 		});
+	}
+
+	async runSentryDemo(name?: string): Promise<ScenarioResponse> {
+		const sentryReady =
+			process.env.SENTRY_ENABLED !== "false" &&
+			Boolean(process.env.SENTRY_DSN);
+		if (!sentryReady) {
+			this.loggingService.warn(
+				"Sentry demo requested while Sentry is disabled.",
+			);
+			return {
+				statusCode: 503,
+				body: {
+					ok: false,
+					message:
+						"Sentry is not enabled. Set SENTRY_DSN and SENTRY_ENABLED=true.",
+				},
+			};
+		}
+
+		const demoName = name?.trim() || "sentry-demo";
+		const correlationId = `sentry-demo-${Date.now()}`;
+		const demoError = new Error(
+			`Sentry demo error: ${demoName} (${correlationId})`,
+		);
+
+		const eventId = Sentry.withScope((scope) => {
+			scope.setTag("scenario.type", "sentry_demo");
+			scope.setTag("scenario.status", "error");
+			scope.setContext("sentry_demo", {
+				demoName,
+				correlationId,
+				environment: process.env.SENTRY_ENVIRONMENT ?? "development",
+			});
+			// Unique fingerprint prevents grouping confusion during verification.
+			scope.setFingerprint(["signal-lab", "sentry-demo", correlationId]);
+			return Sentry.captureException(demoError);
+		});
+
+		const flushed = await Sentry.flush(2_000);
+		this.loggingService.error("Sentry demo event emitted.", {
+			demoName,
+			correlationId,
+			eventId,
+			flushed,
+		});
+
+		return {
+			statusCode: 202,
+			body: {
+				ok: true,
+				eventId,
+				correlationId,
+				flushed,
+				message:
+					"Sentry demo event emitted. Search by eventId or correlationId in Sentry.",
+			},
+		};
 	}
 
 	private async completeSuccessfulRun(

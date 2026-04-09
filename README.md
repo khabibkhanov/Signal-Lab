@@ -71,11 +71,19 @@ Use these files for a fast, auditable validation path:
 - Orchestrator execution report: `evidence/orchestrator/prd-002-report.md`
 - Proof capture guide: `evidence/proof/README.md`
 - Proof bundle index: `evidence/proof/index.md`
+- Sentry check playbook: `evidence/verification/sentry-check-playbook.md`
+- Sentry demo run evidence: `evidence/verification/sentry-demo-check.md`
 
 Optional completeness check:
 
 ```bash
 bash scripts/check-proof-bundle.sh
+```
+
+Sentry verification demo:
+
+```bash
+bash scripts/sentry-demo-check.sh
 ```
 
 ## Sentry Production-Like Setup

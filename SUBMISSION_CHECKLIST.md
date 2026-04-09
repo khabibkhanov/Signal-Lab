@@ -24,6 +24,7 @@ cat evidence/verification/observability-smoke.md | head -n 40
 cat evidence/verification/startup-dx.md | head -n 40
 cat evidence/proof/index.md
 bash scripts/check-proof-bundle.sh
+bash scripts/sentry-demo-check.sh
 
 # Команда остановки:
 docker compose down
@@ -67,6 +68,9 @@ docker compose down
 | Sentry exception  | В UI запустить `system_error`                                            | Sentry project dashboard (при валидном `SENTRY_DSN` в `.env`)                                    |
 
 Артефакт проверки: `evidence/verification/observability-smoke.md`
+
+Sentry demo playbook: `evidence/verification/sentry-check-playbook.md`
+Sentry demo evidence: `evidence/verification/sentry-demo-check.md`
 
 ---
 
@@ -138,12 +142,12 @@ Custom skills закрывают Signal Lab-специфику: контракт
 
 ## Скриншоты / видео
 
-- [ ] evidence/proof/screenshots/01-ui-scenario-run.png
-- [ ] evidence/proof/screenshots/02-grafana-dashboard.png
-- [ ] evidence/proof/screenshots/03-loki-explore.png
-- [ ] evidence/proof/screenshots/04-sentry-system-error.png
+- [x] evidence/proof/screenshots/01-ui-scenario-run.png
+- [x] evidence/proof/screenshots/02-grafana-dashboard.png
+- [x] evidence/proof/screenshots/03-loki-explore.png
+- [x] evidence/proof/screenshots/04-sentry-system-error.png
 - [ ] evidence/proof/video/01-end-to-end-demo.mp4
-- [ ] evidence/proof/index.md заполнен
+- [x] evidence/proof/index.md заполнен
 
 Гайд по съёмке и требованиям: `evidence/proof/README.md`
 
