@@ -146,7 +146,7 @@ Custom skills закрывают Signal Lab-специфику: контракт
 - [x] evidence/proof/screenshots/02-grafana-dashboard.png
 - [x] evidence/proof/screenshots/03-loki-explore.png
 - [x] evidence/proof/screenshots/04-sentry-system-error.png
-- [ ] evidence/proof/video/01-end-to-end-demo.mp4
+- [x] evidence/proof/video/01-end-to-end-demo.mp4
 - [x] evidence/proof/index.md заполнен
 
 Гайд по съёмке и требованиям: `evidence/proof/README.md`

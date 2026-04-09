@@ -11,7 +11,7 @@ SENTRY_ENVIRONMENT: development
 - [x] evidence/proof/screenshots/02-grafana-dashboard.png
 - [x] evidence/proof/screenshots/03-loki-explore.png
 - [x] evidence/proof/screenshots/04-sentry-system-error.png
-- [ ] evidence/proof/video/01-end-to-end-demo.mp4
+- [x] evidence/proof/video/01-end-to-end-demo.mp4
 
 ## Sentry Demo Evidence
 
