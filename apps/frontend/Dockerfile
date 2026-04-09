@@ -1,4 +1,8 @@
-FROM node:20-alpine
+FROM cgr.dev/chainguard/node:latest-dev
+
+ENTRYPOINT []
+
+USER root
 
 WORKDIR /workspace/apps/frontend
 

@@ -1,8 +1,10 @@
-FROM node:20-bookworm-slim
+FROM cgr.dev/chainguard/node:latest-dev
 
-RUN apt-get update \
-	&& apt-get install -y --no-install-recommends openssl \
-	&& rm -rf /var/lib/apt/lists/*
+ENTRYPOINT []
+
+USER root
+
+RUN apk add --no-cache openssl
 
 WORKDIR /workspace/apps/backend
 
