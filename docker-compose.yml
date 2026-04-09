@@ -1,0 +1,124 @@
+services:
+    postgres:
+        image: postgres:16-alpine
+        container_name: signal-lab-postgres
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER:-signal}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-signal}
+            POSTGRES_DB: ${POSTGRES_DB:-signal_lab}
+        ports:
+            - "5432:5432"
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "pg_isready -U ${POSTGRES_USER:-signal} -d ${POSTGRES_DB:-signal_lab}",
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        volumes:
+            - pg_data:/var/lib/postgresql/data
+
+    backend:
+        build:
+            context: .
+            dockerfile: apps/backend/Dockerfile
+        container_name: signal-lab-backend
+        working_dir: /workspace/apps/backend
+        environment:
+            DATABASE_URL: ${DATABASE_URL:-postgresql://signal:signal@postgres:5432/signal_lab?schema=public}
+            PORT: ${PORT:-3001}
+            NODE_ENV: ${NODE_ENV:-development}
+            LOG_FILE_PATH: ${LOG_FILE_PATH:-/var/log/signal-lab/backend.log}
+            SENTRY_DSN: ${SENTRY_DSN:-}
+            SENTRY_ENABLED: ${SENTRY_ENABLED:-true}
+            SENTRY_ENVIRONMENT: ${SENTRY_ENVIRONMENT:-development}
+            SENTRY_RELEASE: ${SENTRY_RELEASE:-signal-lab@0.1.0}
+            SENTRY_TRACES_SAMPLE_RATE: ${SENTRY_TRACES_SAMPLE_RATE:-1.0}
+            SENTRY_PROFILES_SAMPLE_RATE: ${SENTRY_PROFILES_SAMPLE_RATE:-0.0}
+            PRISMA_GENERATE_SKIP_AUTOINSTALL: "true"
+            CHOKIDAR_USEPOLLING: "true"
+        depends_on:
+            postgres:
+                condition: service_healthy
+        command: sh -c "npm install && npm run prisma:generate && npm run prisma:migrate && npm run start:dev"
+        ports:
+            - "3001:3001"
+        volumes:
+            - ./apps/backend:/workspace/apps/backend
+            - ./prisma:/workspace/apps/backend/prisma
+            - backend_node_modules:/workspace/apps/backend/node_modules
+            - signal_lab_logs:/var/log/signal-lab
+
+    frontend:
+        build:
+            context: .
+            dockerfile: apps/frontend/Dockerfile
+        container_name: signal-lab-frontend
+        working_dir: /workspace/apps/frontend
+        environment:
+            NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+            GRAFANA_INTERNAL_URL: ${GRAFANA_INTERNAL_URL:-http://grafana:3000}
+            CHOKIDAR_USEPOLLING: "true"
+        depends_on:
+            - backend
+        command: sh -c "npm install && npm run dev"
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./apps/frontend:/workspace/apps/frontend
+            - frontend_node_modules:/workspace/apps/frontend/node_modules
+
+    prometheus:
+        image: prom/prometheus:v2.54.1
+        container_name: signal-lab-prometheus
+        command:
+            - --config.file=/etc/prometheus/prometheus.yml
+        volumes:
+            - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        ports:
+            - "9090:9090"
+        depends_on:
+            - backend
+
+    loki:
+        image: grafana/loki:2.9.8
+        container_name: signal-lab-loki
+        command: -config.file=/etc/loki/local-config.yaml
+        volumes:
+            - ./monitoring/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+
+    promtail:
+        image: grafana/promtail:2.9.8
+        container_name: signal-lab-promtail
+        command: -config.file=/etc/promtail/config.yml
+        volumes:
+            - ./monitoring/promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+            - signal_lab_logs:/var/log/signal-lab:ro
+        depends_on:
+            - loki
+            - backend
+
+    grafana:
+        image: grafana/grafana:11.1.4
+        container_name: signal-lab-grafana
+        depends_on:
+            - prometheus
+            - loki
+        environment:
+            GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+            GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+        ports:
+            - "3100:3000"
+        volumes:
+            - grafana_data:/var/lib/grafana
+            - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+            - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+
+volumes:
+    pg_data:
+    frontend_node_modules:
+    backend_node_modules:
+    signal_lab_logs:
+    grafana_data:

@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+apps/frontend/node_modules/
+apps/backend/node_modules/
+
+# Build outputs
+apps/frontend/.next/
+apps/backend/dist/
+
+# Environment
+.env
+
+# Logs
+logs/
+*.log
+
+# Runtime state
+.execution/*
+!.execution/.gitkeep
+
+# OS files
+.DS_Store
