@@ -91,8 +91,8 @@ export default function HomePage() {
 
 	const sortedRuns = useMemo(() => runsQuery.data ?? [], [runsQuery.data]);
 
-	const onSubmit = handleSubmit(async (values) => {
-		await mutation.mutateAsync({
+	const onSubmit = handleSubmit((values) => {
+		mutation.mutate({
 			type: values.type,
 			name: values.name || undefined,
 		});
