@@ -69,6 +69,14 @@ Use these files for a fast, auditable validation path:
 - Marketplace skills linkage: `evidence/marketplace/connection-evidence.md`
 - Orchestrator context sample: `evidence/orchestrator/prd-002-context.json`
 - Orchestrator execution report: `evidence/orchestrator/prd-002-report.md`
+- Proof capture guide: `evidence/proof/README.md`
+- Proof bundle index: `evidence/proof/index.md`
+
+Optional completeness check:
+
+```bash
+bash scripts/check-proof-bundle.sh
+```
 
 ## Sentry Production-Like Setup
 

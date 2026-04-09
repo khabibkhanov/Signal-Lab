@@ -22,6 +22,8 @@ cp .env.example .env && docker compose up -d --build
 curl http://localhost:3001/api/health && curl http://localhost:3001/metrics | head -n 20
 cat evidence/verification/observability-smoke.md | head -n 40
 cat evidence/verification/startup-dx.md | head -n 40
+cat evidence/proof/index.md
+bash scripts/check-proof-bundle.sh
 
 # Команда остановки:
 docker compose down
@@ -136,10 +138,14 @@ Custom skills закрывают Signal Lab-специфику: контракт
 
 ## Скриншоты / видео
 
-- [ ] UI приложения
-- [ ] Grafana dashboard с данными
-- [ ] Loki logs
-- [ ] Sentry error
+- [ ] evidence/proof/screenshots/01-ui-scenario-run.png
+- [ ] evidence/proof/screenshots/02-grafana-dashboard.png
+- [ ] evidence/proof/screenshots/03-loki-explore.png
+- [ ] evidence/proof/screenshots/04-sentry-system-error.png
+- [ ] evidence/proof/video/01-end-to-end-demo.mp4
+- [ ] evidence/proof/index.md заполнен
+
+Гайд по съёмке и требованиям: `evidence/proof/README.md`
 
 (Приложи файлы или ссылки ниже)
 
