@@ -1,0 +1,24 @@
+{
+	"plugins": {
+		"grafana-assistant": {
+			"enabled": true
+		},
+		"sentry": {
+			"enabled": true
+		}
+	},
+	"hooks": {
+		"postWrite": [
+			{
+				"name": "prisma-artifacts-guard",
+				"matcher": "prisma/schema.prisma",
+				"command": "bash .cursor/hooks/check-prisma-artifacts.sh"
+			},
+			{
+				"name": "endpoint-observability-guard",
+				"matcher": "apps/backend/src/scenarios/**/*.ts",
+				"command": "bash .cursor/hooks/check-endpoint-observability.sh"
+			}
+		]
+	}
+}
